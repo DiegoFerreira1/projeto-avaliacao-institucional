@@ -1,129 +1,102 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import MaterialTable from "material-table";
 
-const GerenciamentoAlunos = props => {
-  const { useState, useEffect } = React;
-
-  const [data, setData] = useState([
-  ]);
+const GerenciamentoAlunos = () => {
+  const [data, setData] = useState([]);
 
   useEffect(() => {
-    handleClick();
+    fetchData();
   }, []);
 
-  function handleClick() {
+  const fetchData = () => {
     axios
       .get("https://demo8788642.mockable.io/alunos")
       .then(response => {
-        const alunos = response.data.lista.map(c => {
-          return {
-            id: c.id,
-            cpf: c.cpf,
-            matricula: c.matricula,
-            nome: c.nome,
-            idEndereco: c.idEndereco,
-            curso: c.curso
-          };
-        });
+        const alunos = response.data.lista.map(c => ({
+          id: c.id,
+          cpf: c.cpf,
+          matricula: c.matricula,
+          nome: c.nome,
+          idEndereco: c.idEndereco,
+          curso: c.curso
+        }));
         setData(alunos);
       })
       .catch(error => console.log(error));
-  }
+  };
 
-  function handleCreate(newData) {
+  const handleCreate = newData => {
     axios
-      .post("https://demo8788642.mockable.io/alunos", {
-        "id": newData.id,
-        "cpf": newData.cpf,
-        "matricula": newData.matricula,
-        "nome": newData.nome,
-        "idEndereco": newData.idEndereco,
-        "curso": newData.curso
+      .post("https://demo8788642.mockable.io/alunos", newData)
+      .then(response => {
+        console.log('Salvo com sucesso.');
+        setData(prevData => [...prevData, newData]);
       })
-      .then(function (response) {
-        console.log('Salvo com sucesso.')
-      });
-  }
+      .catch(error => console.log(error));
+  };
 
-  function handleUpdate(newData) {
+  const handleUpdate = (newData, oldData) => {
     axios
-      .put("https://demo8788642.mockable.io/alunos", {
-        "id": newData.id,
-        "cpf": newData.cpf,
-        "matricula": newData.matricula,
-        "nome": newData.nome,
-        "idEndereco": newData.idEndereco,
-        "curso": newData.curso
+      .put(`https://demo8788642.mockable.io/alunos/${oldData.id}`, newData)
+      .then(response => {
+        console.log('Atualizado com sucesso.');
+        setData(prevData => {
+          const dataUpdate = [...prevData];
+          const index = oldData.tableData.id;
+          dataUpdate[index] = newData;
+          return dataUpdate;
+        });
       })
-      .then(function (response) {
-        console.log('Atualizado com sucesso.')
-      });
-  }
+      .catch(error => console.log(error));
+  };
 
-  function handleDelete(newData) {
+  const handleDelete = oldData => {
     axios
-      .delete("https://demo8788642.mockable.io/delete-aluno", {
-        "id": newData.id
+      .delete(`https://demo8788642.mockable.io/alunos/${oldData.id}`)
+      .then(response => {
+        console.log('Deletado com sucesso.');
+        setData(prevData => {
+          const dataDelete = [...prevData];
+          const index = oldData.tableData.id;
+          dataDelete.splice(index, 1);
+          return dataDelete;
+        });
       })
-      .then(function (response) {
-        console.log('Deletado com sucesso.')
-      });
-  }
+      .catch(error => console.log(error));
+  };
 
   return (
-    [
-
-      <MaterialTable
-        title="Gerenciamento de Alunos"
-        columns={[
-          { title: 'Id', field: 'id' },
-          { title: 'cpf', field: 'cpf' },
-          { title: 'matricula', field: 'matricula', type: 'numerico' },
-          { title: 'nome', field: 'nome' },
-          { title: 'endereco', field: 'idEndereco' },
-          { title: 'curso', field: 'curso' }
-        ]}
-        data={data}
-        editable={{
-          onRowAdd: newData =>
-            new Promise((resolve, reject) => {
-              setTimeout(() => {
-                handleCreate(newData)
-
-                const dataCreate = [...data];
-
-                setData([...dataCreate, newData]);
-
-                resolve();
-              }, 1000)
-            }),
-          onRowUpdate: (newData, oldData) =>
-            new Promise((resolve, reject) => {
-              setTimeout(() => {
-                const dataUpdate = [...data];
-                const index = oldData.tableData.id;
-                dataUpdate[index] = newData;
-                setData([...dataUpdate]);
-
-                resolve();
-              }, 1000)
-            }),
-          onRowDelete: oldData =>
-            new Promise((resolve, reject) => {
-              setTimeout(() => {
-                handleDelete(oldData)
-                const dataDelete = [...data];
-                const index = oldData.tableData.id;
-                dataDelete.splice(index, 1);
-                setData([...dataDelete]);
-
-                resolve()
-              }, 1000)
-            }),
-        }}
-      />]
-  )
-}
+    <MaterialTable
+      title="Gerenciamento de Alunos"
+      columns={[
+        { title: 'Id', field: 'id' },
+        { title: 'CPF', field: 'cpf' },
+        { title: 'Matrícula', field: 'matricula', type: 'numeric' },
+        { title: 'Nome', field: 'nome' },
+        { title: 'Endereço', field: 'idEndereco' },
+        { title: 'Curso', field: 'curso' }
+      ]}
+      data={data}
+      editable={{
+        onRowAdd: newData =>
+          new Promise((resolve, reject) => {
+            handleCreate(newData);
+            resolve();
+          }),
+        onRowUpdate: (newData, oldData) =>
+          new Promise((resolve, reject) => {
+            handleUpdate(newData, oldData);
+            resolve();
+          }),
+        onRowDelete: oldData =>
+          new Promise((resolve, reject) => {
+            handleDelete(oldData);
+            resolve();
+          }),
+      }}
+    />
+  );
+};
 
 export default GerenciamentoAlunos;

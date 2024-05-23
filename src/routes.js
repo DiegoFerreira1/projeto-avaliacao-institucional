@@ -27,10 +27,6 @@ import Language from "@material-ui/icons/Language";
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
-//import GerenciamentoProjetos from "views/Projetos/gerenciamentoProjetos.js";
-//import GerenciamentoProfessores from "views/Professores/gerenciamentoProfessores.js";
-import GerenciamentoAlunos from "views/Alunos/gerenciamentoAlunos.js";
-import GerenciamentoProfessores from "views/Professores/gerenciamentoProfessores";
 import TableList from "views/TableList/TableList.js";
 import Typography from "views/Typography/Typography.js";
 import Icons from "views/Icons/Icons.js";
@@ -40,6 +36,11 @@ import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
 // core components/views for RTL layout
 import RTLPage from "views/RTLPage/RTLPage.js";
 import { EmojiEmotions, EmojiPeople, PersonOutline } from "@material-ui/icons";
+import { Icon } from "@material-ui/core";
+//import GerenciamentoProjetos from "views/Projetos/gerenciamentoProjetos.js";
+import GerenciamentoAlunos from "views/Alunos/gerenciamentoAlunos.js";
+import GerenciamentoProfessores from "views/Professores/gerenciamentoProfessores";
+import GerenciamentoEnderecos from "views/Enderecos/gerenciamentoEnderecos";
 
 const dashboardRoutes = [
   /*
@@ -84,6 +85,14 @@ const dashboardRoutes = [
     component: TableList,
     layout: "/admin"
   }*/,
+  // {
+  //   path: "/Enderecos",
+  //   name: "Gereciamento de Enderecos",
+  //   rtlName: "Enderecos",
+  //   Icon: Person,
+  //   component: GerenciamentoEnderecos,
+  //   layout: "/admin"
+  // },
   {
     path: "/upgrade-to-pro",
     name: "Upgrade To PRO",

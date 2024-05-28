@@ -35,12 +35,13 @@ import NotificationsPage from "views/Notifications/Notifications.js";
 import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
 // core components/views for RTL layout
 import RTLPage from "views/RTLPage/RTLPage.js";
-import { EmojiEmotions, EmojiPeople, PersonOutline } from "@material-ui/icons";
+import { EmojiEmotions, EmojiPeople, LibraryAddCheck, LibraryBooksSharp, PersonOutline } from "@material-ui/icons";
 import { Icon } from "@material-ui/core";
 //import GerenciamentoProjetos from "views/Projetos/gerenciamentoProjetos.js";
 import GerenciamentoAlunos from "views/Alunos/gerenciamentoAlunos.js";
-import GerenciamentoProfessores from "views/Professores/gerenciamentoProfessores";
 import GerenciamentoEnderecos from "views/Enderecos/gerenciamentoEnderecos";
+import GerenciamentoAvaliacao from "views/Avaliacao/gerenciamentoAvaliacao";
+import GerenciamentoComponenteCurricular from "views/Curricular/gerenciamentoComponenteCurricular";
 
 const dashboardRoutes = [
   /*
@@ -61,36 +62,36 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    path: "/Professores",
-    name: "Gerenciamento de Professores",
-    rtlName: "Professores",
-    icon: Person,
-    component: GerenciamentoProfessores,
+    path: "/Avaliacao",
+    name: "Gerenciamento de Avaliacoes",
+    rtlName: "Avaliacao",
+    icon: LibraryAddCheck,
+    component: GerenciamentoAvaliacao,
     layout: "/admin"
   },
-  // {
-  //   path: "/projetos",
-  //   name: "Gerenciamento de Projetos",
-  //   rtlName: "Projetos",
-  //   icon: LibraryBooks,
-  //   component: GerenciamentoProjetos,
-  //   layout: "/admin"
-  // }
-  /*
   {
-    path: "/table",
-    name: "Table List",
-    rtlName: "قائمة الجدول",
-    icon: "content_paste",
-    component: TableList,
+    path: "/Curricular",
+    name: "Gerenciamento de Componente Curricular",
+    rtlName: "Curricular",
+    icon: LibraryBooks,
+    component: GerenciamentoComponenteCurricular,
     layout: "/admin"
-  }*/,
+  },
+  {
+    path: "/Enderecos",
+    name: "Gereciamento de Enderecos",
+    rtlName: "Enderecos",
+    icon: LocationOn,
+    component: GerenciamentoEnderecos,
+    layout: "/admin"
+  },
+  
   // {
-  //   path: "/Enderecos",
-  //   name: "Gereciamento de Enderecos",
-  //   rtlName: "Enderecos",
-  //   Icon: Person,
-  //   component: GerenciamentoEnderecos,
+  //   path: "/table",
+  //   name: "Table List",
+  //   rtlName: "قائمة الجدول",
+  //   icon: "content_paste",
+  //   component: TableList,
   //   layout: "/admin"
   // },
   {

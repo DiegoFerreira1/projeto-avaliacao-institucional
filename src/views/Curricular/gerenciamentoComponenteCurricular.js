@@ -2,10 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import MaterialTable from "material-table";
 
-
-const GerenciamentoAlunos = () => {
+const GerenciamentoComponenteCurricular = () => {
   const [data, setData] = useState([]);
-  const [selectedEndereco, setSelectedEndereco] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -13,26 +11,25 @@ const GerenciamentoAlunos = () => {
 
   const fetchData = () => {
     axios
-      .get("https://demo8788642.mockable.io/alunos")
+      .get("https://demo8788642.mockable.io/componentes")
       .then(response => {
-        const alunos = response.data.lista.map(c => ({
+        const componentes = response.data.lista.map(c => ({
           id: c.id,
-          cpf: c.cpf,
-          matricula: c.matricula,
           nome: c.nome,
-          enderecoId: c.enderecoId,
-          curso: c.curso
+          sigla: c.sigla,
+          matrizCurricular: c.matrizCurricular,
+          cargaHoraria: c.cargaHoraria,
         }));
-        setData(alunos);
+        setData(componentes);
       })
       .catch(error => console.log(error));
   };
 
   const handleCreate = newData => {
     axios
-      .post("https://demo8788642.mockable.io/alunos", newData)
+      .post("https://demo8788642.mockable.io/componentes", newData)
       .then(response => {
-        console.log('Aluno salvo com sucesso.');
+        console.log('Componente curricular salvo com sucesso.');
         setData(prevData => [...prevData, newData]);
       })
       .catch(error => console.log(error));
@@ -40,9 +37,9 @@ const GerenciamentoAlunos = () => {
 
   const handleUpdate = (newData, oldData) => {
     axios
-      .put(`https://demo8788642.mockable.io/alunos/${oldData.id}`, newData)
+      .put(`https://demo8788642.mockable.io/componentes/${oldData.id}`, newData)
       .then(response => {
-        console.log('Aluno atualizado com sucesso.');
+        console.log('Componente curricular atualizado com sucesso.');
         setData(prevData => {
           const dataUpdate = [...prevData];
           const index = oldData.tableData.id;
@@ -55,9 +52,9 @@ const GerenciamentoAlunos = () => {
 
   const handleDelete = oldData => {
     axios
-      .delete(`https://demo8788642.mockable.io/alunos/${oldData.id}`)
+      .delete(`https://demo8788642.mockable.io/componentes/${oldData.id}`)
       .then(response => {
-        console.log('Aluno deletado com sucesso.');
+        console.log('Componente curricular deletado com sucesso.');
         setData(prevData => {
           const dataDelete = [...prevData];
           const index = oldData.tableData.id;
@@ -71,14 +68,13 @@ const GerenciamentoAlunos = () => {
   return (
     <>
       <MaterialTable
-        title="Gerenciamento de Alunos"
+        title="Gerenciamento de Componente Curricular"
         columns={[
           { title: 'Id', field: 'id', editable: 'never' },
-          { title: 'CPF', field: 'cpf' },
-          { title: 'Matrícula', field: 'matricula', type: 'numeric' },
-          { title: 'Nome Completo', field: 'nome' },
-          { title: 'Endereço ID', field: 'enderecoId', editable: 'never' },
-          { title: 'Curso', field: 'curso' }
+          { title: 'Nome do Componente', field: 'nome' },
+          { title: 'Sigla do Componente', field: 'sigla' },
+          { title: 'Matriz Curricular', field: 'matrizCurricular' },
+          { title: 'Carga Horária', field: 'cargaHoraria' },
         ]}
         data={data}
         editable={{
@@ -99,9 +95,8 @@ const GerenciamentoAlunos = () => {
             }),
         }}
       />
-
     </>
   );
 };
 
-export default GerenciamentoAlunos;
+export default GerenciamentoComponenteCurricular;

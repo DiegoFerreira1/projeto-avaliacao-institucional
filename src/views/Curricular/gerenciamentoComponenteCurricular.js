@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
 import MaterialTable from "material-table";
+import apiService from "apiService"; 
 
 const GerenciamentoComponenteCurricular = () => {
   const [data, setData] = useState([]);
@@ -9,60 +9,43 @@ const GerenciamentoComponenteCurricular = () => {
     fetchData();
   }, []);
 
-  const fetchData = () => {
-    axios
-      .get("https://demo8788642.mockable.io/componentes")
-      .then(response => {
-        const componentes = response.data.lista.map(c => ({
-          id: c.id,
-          nome: c.nome,
-          sigla: c.sigla,
-          matrizCurricular: c.matrizCurricular,
-          cargaHoraria: c.cargaHoraria,
-        }));
-        setData(componentes);
-      })
-      .catch(error => console.log(error));
+  const fetchData = async () => {
+    try {
+      const componentes = await apiService.getAllComponentes();
+      setData(componentes);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const handleCreate = newData => {
-    axios
-      .post("https://demo8788642.mockable.io/componentes", newData)
-      .then(response => {
-        console.log('Componente curricular salvo com sucesso.');
-        setData(prevData => [...prevData, newData]);
-      })
-      .catch(error => console.log(error));
+  const handleCreate = async (newData) => {
+    try {
+      await apiService.createComponente(newData); 
+      console.log('Componente curricular criado com sucesso.');
+      fetchData(); 
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const handleUpdate = (newData, oldData) => {
-    axios
-      .put(`https://demo8788642.mockable.io/componentes/${oldData.id}`, newData)
-      .then(response => {
-        console.log('Componente curricular atualizado com sucesso.');
-        setData(prevData => {
-          const dataUpdate = [...prevData];
-          const index = oldData.tableData.id;
-          dataUpdate[index] = newData;
-          return dataUpdate;
-        });
-      })
-      .catch(error => console.log(error));
+  const handleUpdate = async (newData, oldData) => {
+    try {
+      await apiService.updateComponente(oldData.id, newData); 
+      console.log('Componente curricular atualizado com sucesso.');
+      fetchData(); 
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const handleDelete = oldData => {
-    axios
-      .delete(`https://demo8788642.mockable.io/componentes/${oldData.id}`)
-      .then(response => {
-        console.log('Componente curricular deletado com sucesso.');
-        setData(prevData => {
-          const dataDelete = [...prevData];
-          const index = oldData.tableData.id;
-          dataDelete.splice(index, 1);
-          return dataDelete;
-        });
-      })
-      .catch(error => console.log(error));
+  const handleDelete = async (oldData) => {
+    try {
+      await apiService.deleteComponente(oldData.id); 
+      console.log('Componente curricular deletado com sucesso.');
+      fetchData(); 
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
 import MaterialTable from "material-table";
-
+import apiService from "apiService"; 
 
 const GerenciamentoAlunos = () => {
   const [data, setData] = useState([]);
@@ -11,61 +10,43 @@ const GerenciamentoAlunos = () => {
     fetchData();
   }, []);
 
-  const fetchData = () => {
-    axios
-      .get("https://demo8788642.mockable.io/alunos")
-      .then(response => {
-        const alunos = response.data.lista.map(c => ({
-          id: c.id,
-          cpf: c.cpf,
-          matricula: c.matricula,
-          nome: c.nome,
-          enderecoId: c.enderecoId,
-          curso: c.curso
-        }));
-        setData(alunos);
-      })
-      .catch(error => console.log(error));
+  const fetchData = async () => {
+    try {
+      const alunos = await apiService.getAllAlunos(); 
+      setData(alunos);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const handleCreate = newData => {
-    axios
-      .post("https://demo8788642.mockable.io/alunos", newData)
-      .then(response => {
-        console.log('Aluno salvo com sucesso.');
-        setData(prevData => [...prevData, newData]);
-      })
-      .catch(error => console.log(error));
+  const handleCreate = async (newData) => {
+    try {
+      await apiService.createAluno(newData);
+      console.log('Aluno criado com sucesso.');
+      fetchData(); 
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const handleUpdate = (newData, oldData) => {
-    axios
-      .put(`https://demo8788642.mockable.io/alunos/${oldData.id}`, newData)
-      .then(response => {
-        console.log('Aluno atualizado com sucesso.');
-        setData(prevData => {
-          const dataUpdate = [...prevData];
-          const index = oldData.tableData.id;
-          dataUpdate[index] = newData;
-          return dataUpdate;
-        });
-      })
-      .catch(error => console.log(error));
+  const handleUpdate = async (newData, oldData) => {
+    try {
+      await apiService.updateAluno(oldData.id, newData); 
+      console.log('Aluno atualizado com sucesso.');
+      fetchData(); 
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const handleDelete = oldData => {
-    axios
-      .delete(`https://demo8788642.mockable.io/alunos/${oldData.id}`)
-      .then(response => {
-        console.log('Aluno deletado com sucesso.');
-        setData(prevData => {
-          const dataDelete = [...prevData];
-          const index = oldData.tableData.id;
-          dataDelete.splice(index, 1);
-          return dataDelete;
-        });
-      })
-      .catch(error => console.log(error));
+  const handleDelete = async (oldData) => {
+    try {
+      await apiService.deleteAluno(oldData.id); 
+      console.log('Aluno deletado com sucesso.');
+      fetchData(); 
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -99,7 +80,6 @@ const GerenciamentoAlunos = () => {
             }),
         }}
       />
-
     </>
   );
 };

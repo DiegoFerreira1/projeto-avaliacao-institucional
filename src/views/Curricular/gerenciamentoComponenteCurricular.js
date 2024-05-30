@@ -4,6 +4,8 @@ import apiService from "apiService";
 
 const GerenciamentoComponenteCurricular = () => {
   const [data, setData] = useState([]);
+  const [alunosComponente, setAlunosComponente] = useState([]);
+  const [selectedComponente, setSelectedComponente] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -13,6 +15,15 @@ const GerenciamentoComponenteCurricular = () => {
     try {
       const componentes = await apiService.getAllComponentes();
       setData(componentes);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchAlunosComponente = async (componenteId) => {
+    try {
+      const alunos = await apiService.getAlunosPorComponente(componenteId);
+      setAlunosComponente(alunos);
     } catch (error) {
       console.error(error);
     }
@@ -48,6 +59,26 @@ const GerenciamentoComponenteCurricular = () => {
     }
   };
 
+  const handleAssociateAluno = async (alunoId) => {
+    try {
+      await apiService.associarAlunoComponente(selectedComponente.id, alunoId);
+      console.log('Aluno associado ao componente curricular.');
+      fetchAlunosComponente(selectedComponente.id);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDisassociateAluno = async (alunoId) => {
+    try {
+      await apiService.desassociarAlunoComponente(selectedComponente.id, alunoId);
+      console.log('Aluno desassociado do componente curricular.');
+      fetchAlunosComponente(selectedComponente.id);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
       <MaterialTable
@@ -60,6 +91,10 @@ const GerenciamentoComponenteCurricular = () => {
           { title: 'Carga Horária', field: 'cargaHoraria' },
         ]}
         data={data}
+        onRowClick={(evt, rowData) => {
+          setSelectedComponente(rowData);
+          fetchAlunosComponente(rowData.id);
+        }}
         editable={{
           onRowAdd: newData =>
             new Promise((resolve, reject) => {
@@ -77,7 +112,31 @@ const GerenciamentoComponenteCurricular = () => {
               resolve();
             }),
         }}
+        actions={[
+          {
+            icon: 'person_add',
+            tooltip: 'Associar Aluno',
+            onClick: (event, rowData) => handleAssociateAluno(rowData.id)
+          },
+          {
+            icon: 'person_remove',
+            tooltip: 'Desassociar Aluno',
+            onClick: (event, rowData) => handleDisassociateAluno(rowData.id)
+          }
+        ]}
       />
+      {selectedComponente && (
+        <MaterialTable
+          title={`Alunos do Componente ${selectedComponente.nome}`}
+          columns={[
+            { title: 'Id', field: 'id', editable: 'never' },
+            { title: 'CPF', field: 'cpf' },
+            { title: 'Matrícula', field: 'matricula', type: 'numeric' },
+            { title: 'Nome Completo', field: 'nome' },
+          ]}
+          data={alunosComponente}
+        />
+      )}
     </>
   );
 };

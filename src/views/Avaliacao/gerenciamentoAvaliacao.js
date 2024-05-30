@@ -2,17 +2,47 @@ import React, { useState, useEffect } from "react";
 import MaterialTable from "material-table";
 import apiService from "apiService";
 
-const GerenciamentoAvaliacao = () => {
+const GerenciamentoAvaliacoes = () => {
   const [data, setData] = useState([]);
+  const [componentes, setComponentes] = useState({});
+  const [alunos, setAlunos] = useState({});
 
   useEffect(() => {
     fetchData();
+    fetchComponentes();
+    fetchAlunos();
   }, []);
 
   const fetchData = async () => {
     try {
-      const avaliacoes = await apiService.getAllAvaliacoes(); 
+      const avaliacoes = await apiService.getAllAvaliacoes();
       setData(avaliacoes);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchComponentes = async () => {
+    try {
+      const componentesData = await apiService.getAllComponentes();
+      const options = {};
+      componentesData.forEach(componente => {
+        options[componente.id] = `${componente.id} - ${componente.nome}`;
+      });
+      setComponentes(options);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchAlunos = async () => {
+    try {
+      const alunosData = await apiService.getAllAlunos();
+      const options = {};
+      alunosData.forEach(aluno => {
+        options[aluno.id] = `${aluno.id} - ${aluno.nome}`;
+      });
+      setAlunos(options);
     } catch (error) {
       console.error(error);
     }
@@ -20,9 +50,29 @@ const GerenciamentoAvaliacao = () => {
 
   const handleCreate = async (newData) => {
     try {
-      await apiService.createAvaliacao(newData); 
+      await apiService.createAvaliacao(newData);
       console.log('Avaliação criada com sucesso.');
-      fetchData(); 
+      fetchData();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleUpdate = async (newData, oldData) => {
+    try {
+      await apiService.updateAvaliacao(oldData.id, newData);
+      console.log('Avaliação atualizada com sucesso.');
+      fetchData();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDelete = async (oldData) => {
+    try {
+      await apiService.deleteAvaliacao(oldData.id);
+      console.log('Avaliação deletada com sucesso.');
+      fetchData();
     } catch (error) {
       console.error(error);
     }
@@ -31,13 +81,35 @@ const GerenciamentoAvaliacao = () => {
   return (
     <>
       <MaterialTable
-        title="Gerenciamento de Avaliação"
+        title="Gerenciamento de Avaliações"
         columns={[
           { title: 'Id', field: 'id', editable: 'never' },
-          { title: 'Nome', field: 'nome' },
-          { title: 'Tipo', field: 'tipo' },
-          { title: 'Data', field: 'data', type: 'date' },
-          { title: 'Nota', field: 'nota', type: 'numeric' },
+          { title: 'Período da Avaliação', field: 'periodo', type: 'string', validate: rowData => rowData.periodo?.length === 6 },
+          { title: 'Componente Curricular', field: 'componente', lookup: componentes },
+          { title: 'Aluno', field: 'aluno', lookup: alunos },
+          { title: 'Categoria da Avaliação', field: 'categoria', type: 'string' },
+
+          //Lista de 0 a 10
+
+    {
+      title: 'Conceito do Professor',
+      field: 'conceitoProfessor',
+      type: 'numeric',
+      lookup: { 0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10' },
+    },
+    {
+      title: 'Conceito do Recurso Didático',
+      field: 'conceitoRecurso',
+      type: 'numeric',
+      lookup: { 0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10' },
+    },
+    {
+      title: 'Conceito da Relevância da Disciplina',
+      field: 'conceitoRelevancia',
+      type: 'numeric',
+      lookup: { 0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10' },
+    },
+          // Outras colunas...
         ]}
         data={data}
         editable={{
@@ -46,10 +118,20 @@ const GerenciamentoAvaliacao = () => {
               handleCreate(newData);
               resolve();
             }),
+          onRowUpdate: (newData, oldData) =>
+            new Promise((resolve, reject) => {
+              handleUpdate(newData, oldData);
+              resolve();
+            }),
+          onRowDelete: oldData =>
+            new Promise((resolve, reject) => {
+              handleDelete(oldData);
+              resolve();
+            }),
         }}
       />
     </>
   );
 };
 
-export default GerenciamentoAvaliacao;
+export default GerenciamentoAvaliacoes;

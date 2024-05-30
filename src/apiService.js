@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://demo8788642.mockable.io/', // URL base da sua API
+  baseURL: 'https://demo8788642.mockable.io/', 
 });
 
 const apiService = {
@@ -52,22 +52,23 @@ const apiService = {
     },
 
   // Operações CRUD para Gerenciamento de Avaliação
-
   getAllAvaliacoes: async () => {
     try {
       const response = await api.get('avaliacoes');
       return response.data.lista.map(a => ({
         id: a.id,
-        nome: a.nome,
-        tipo: a.tipo,
-        data: a.data,
-        nota: a.nota,
+        periodo: a.periodo,
+        componenteCurricular: a.componenteCurricular,
+        categoria: a.categoria,
+        conceitoProfessor: a.conceitoProfessor,
+        conceitoRecurso: a.conceitoRecurso,
+        conceitoRelevancia: a.conceitoRelevancia,
       }));
     } catch (error) {
       throw new Error('Erro ao buscar avaliações: ' + error.message);
     }
   },
-
+  
   createAvaliacao: async (avaliacaoData) => {
     try {
       const response = await api.post('avaliacoes', avaliacaoData);
@@ -76,7 +77,7 @@ const apiService = {
       throw new Error('Erro ao criar avaliação: ' + error.message);
     }
   },
-
+  
   updateAvaliacao: async (avaliacaoId, avaliacaoData) => {
     try {
       const response = await api.put(`avaliacoes/${avaliacaoId}`, avaliacaoData);
@@ -85,7 +86,7 @@ const apiService = {
       throw new Error('Erro ao atualizar avaliação: ' + error.message);
     }
   },
-
+  
   deleteAvaliacao: async (avaliacaoId) => {
     try {
       const response = await api.delete(`avaliacoes/${avaliacaoId}`);
@@ -94,50 +95,50 @@ const apiService = {
       throw new Error('Erro ao deletar avaliação: ' + error.message);
     }
   },
-
+  
     // Operações CRUD para Gerenciamento de Componentes Curriculares
 
     getAllComponentes: async () => {
-        try {
-          const response = await api.get('componentes');
-          return response.data.lista.map(c => ({
-            id: c.id,
-            nome: c.nome,
-            sigla: c.sigla,
-            matrizCurricular: c.matrizCurricular,
-            cargaHoraria: c.cargaHoraria,
-          }));
-        } catch (error) {
-          throw new Error('Erro ao buscar componentes curriculares: ' + error.message);
-        }
-      },
-    
-      createComponente: async (componenteData) => {
-        try {
-          const response = await api.post('componentes', componenteData);
-          return response.data;
-        } catch (error) {
-          throw new Error('Erro ao criar componente curricular: ' + error.message);
-        }
-      },
-    
-      updateComponente: async (componenteId, componenteData) => {
-        try {
-          const response = await api.put(`componentes/${componenteId}`, componenteData);
-          return response.data;
-        } catch (error) {
-          throw new Error('Erro ao atualizar componente curricular: ' + error.message);
-        }
-      },
-    
-      deleteComponente: async (componenteId) => {
-        try {
-          const response = await api.delete(`componentes/${componenteId}`);
-          return response.data;
-        } catch (error) {
-          throw new Error('Erro ao deletar componente curricular: ' + error.message);
-        }
-      },
+      try {
+        const response = await api.get('componentes');
+        return response.data.lista.map(c => ({
+          id: c.id,
+          nome: c.nome,
+          sigla: c.sigla,
+          matrizCurricular: c.matrizCurricular,
+          cargaHoraria: c.cargaHoraria,
+        }));
+      } catch (error) {
+        throw new Error('Erro ao buscar componentes curriculares: ' + error.message);
+      }
+    },
+  
+    createComponente: async (componenteData) => {
+      try {
+        const response = await api.post('componentes', componenteData);
+        return response.data;
+      } catch (error) {
+        throw new Error('Erro ao criar componente curricular: ' + error.message);
+      }
+    },
+  
+    updateComponente: async (componenteId, componenteData) => {
+      try {
+        const response = await api.put(`componentes/${componenteId}`, componenteData);
+        return response.data;
+      } catch (error) {
+        throw new Error('Erro ao atualizar componente curricular: ' + error.message);
+      }
+    },
+  
+    deleteComponente: async (componenteId) => {
+      try {
+        const response = await api.delete(`componentes/${componenteId}`);
+        return response.data;
+      } catch (error) {
+        throw new Error('Erro ao deletar componente curricular: ' + error.message);
+      }
+    },
 
   // Operações CRUD para Gerenciamento de Endereços
 

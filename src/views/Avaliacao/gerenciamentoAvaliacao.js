@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
 import MaterialTable from "material-table";
+import apiService from "apiService";
 
 const GerenciamentoAvaliacao = () => {
   const [data, setData] = useState([]);
@@ -9,33 +9,24 @@ const GerenciamentoAvaliacao = () => {
     fetchData();
   }, []);
 
-  const fetchData = () => {
-    axios
-      .get("https://demo8788642.mockable.io/avaliacoes")
-      .then(response => {
-        const avaliacoes = response.data.lista.map(a => ({
-          id: a.id,
-          nome: a.nome,
-          tipo: a.tipo,
-          data: a.data,
-          nota: a.nota,
-        }));
-        setData(avaliacoes);
-      })
-      .catch(error => console.log(error));
+  const fetchData = async () => {
+    try {
+      const avaliacoes = await apiService.getAllAvaliacoes(); 
+      setData(avaliacoes);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const handleCreate = newData => {
-    axios
-      .post("https://demo8788642.mockable.io/avaliacoes", newData)
-      .then(response => {
-        console.log('Avaliação salva com sucesso.');
-        setData(prevData => [...prevData, newData]);
-      })
-      .catch(error => console.log(error));
+  const handleCreate = async (newData) => {
+    try {
+      await apiService.createAvaliacao(newData); 
+      console.log('Avaliação criada com sucesso.');
+      fetchData(); 
+    } catch (error) {
+      console.error(error);
+    }
   };
-
-  // Funções handleUpdate e handleDelete semelhantes às do Gerenciamento de Alunos
 
   return (
     <>
@@ -55,7 +46,6 @@ const GerenciamentoAvaliacao = () => {
               handleCreate(newData);
               resolve();
             }),
-          // onRowUpdate e onRowDelete semelhantes às do Gerenciamento de Alunos
         }}
       />
     </>

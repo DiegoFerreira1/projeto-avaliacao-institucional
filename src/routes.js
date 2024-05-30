@@ -55,7 +55,7 @@ const dashboardRoutes = [
   },*/
   {
     path: "/alunos",
-    name: "Gerenciamento de Alunos",
+    name: "Alunos",
     rtlName: "Alunos",
     icon: Person,
     component: GerenciamentoAlunos,
@@ -63,7 +63,7 @@ const dashboardRoutes = [
   },
   {
     path: "/Avaliacao",
-    name: "Gerenciamento de Avaliacoes",
+    name: "Avaliacões",
     rtlName: "Avaliacao",
     icon: LibraryAddCheck,
     component: GerenciamentoAvaliacao,
@@ -71,7 +71,7 @@ const dashboardRoutes = [
   },
   {
     path: "/Curricular",
-    name: "Gerenciamento de Componente Curricular",
+    name: "Componente Curricular",
     rtlName: "Curricular",
     icon: LibraryBooks,
     component: GerenciamentoComponenteCurricular,
@@ -79,7 +79,7 @@ const dashboardRoutes = [
   },
   {
     path: "/Enderecos",
-    name: "Gereciamento de Enderecos",
+    name: "Endereços",
     rtlName: "Enderecos",
     icon: LocationOn,
     component: GerenciamentoEnderecos,

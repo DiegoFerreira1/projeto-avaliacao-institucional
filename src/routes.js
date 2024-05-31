@@ -44,15 +44,15 @@ import GerenciamentoAvaliacao from "views/Avaliacao/gerenciamentoAvaliacao";
 import GerenciamentoComponenteCurricular from "views/Curricular/gerenciamentoComponenteCurricular";
 
 const dashboardRoutes = [
-  /*
-  {
-    path: "/dashboard",
-    name: "Dashboard",
-    rtlName: "لوحة القيادة",
-    icon: Dashboard,
-    component: DashboardPage,
-    layout: "/admin"
-  },*/
+  
+  // {
+  //   path: "/dashboard",
+  //   name: "Dashboard",
+  //   rtlName: "لوحة القيادة",
+  //   icon: Dashboard,
+  //   component: DashboardPage,
+  //   layout: "/admin"
+  // },
   {
     path: "/alunos",
     name: "Alunos",

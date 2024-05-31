@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MaterialTable from "material-table";
-import apiService from "apiService"; 
+import apiService from "apiServiceTeste"; 
 
 const GerenciamentoComponenteCurricular = () => {
   const [data, setData] = useState([]);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MaterialTable from "material-table";
-import apiService from "apiServiceTeste"; 
+import apiService from "apiService"; 
 
 const GerenciamentoAvaliacoes = () => {
   const [data, setData] = useState([]);

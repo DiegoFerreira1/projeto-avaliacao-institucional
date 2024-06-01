@@ -24,7 +24,7 @@
     "express": "^4.19.2",
     "mongoose": "8.4.0"
   },
-  "scripts": {
+  "scripts": { 
     "start": "react-scripts --openssl-legacy-provider start",
     "build": "react-scripts --openssl-legacy-provider build",
     "test": "react-scripts test --env=jsdom",

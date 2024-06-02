@@ -38,14 +38,15 @@ import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
 import RTLPage from "views/RTLPage/RTLPage.js";
 import { EmojiEmotions, EmojiPeople, LibraryAddCheck, LibraryBooksSharp, PersonOutline } from "@material-ui/icons";
 import { Icon } from "@material-ui/core";
-//import GerenciamentoProjetos from "views/Projetos/gerenciamentoProjetos.js";
-import GerenciamentoAlunos from "views/Alunos/gerenciamentoAlunos.js";
+import GerenciamentoCursos from "views/Cursos/gerenciamentoCursos";
+import GerenciamentoAlunos from "views/Alunos/gerenciamentoAlunos";
 import GerenciamentoEnderecos from "views/Enderecos/gerenciamentoEnderecos";
 import GerenciamentoAvaliacao from "views/Avaliacao/gerenciamentoAvaliacao";
 import GerenciamentoComponenteCurricular from "views/Curricular/gerenciamentoComponenteCurricular";
+import GerenciamentoCategorias from "views/Categorias/gerenciamentoCategorias";
 
 const dashboardRoutes = [
-  /*
+  
   {
     path: "/dashboard",
     name: "Dashboard",
@@ -53,7 +54,31 @@ const dashboardRoutes = [
     icon: Dashboard,
     component: DashboardPage,
     layout: "/admin"
-  },*/
+  },
+  {
+    path: "/cursos",
+    name: "Cursos",
+    rtlName: "Cursos",
+    icon: LibraryBooks,
+    component: GerenciamentoCursos,
+    layout: "/admin"
+  },
+    {
+    path: "/componentes",
+    name: "Componente Curricular",
+    rtlName: "Componentes",
+    icon: LibraryBooks,
+    component: GerenciamentoComponenteCurricular,
+    layout: "/admin"
+  },
+    {
+    path: "/enderecos",
+    name: "Endereços",
+    rtlName: "Enderecos",
+    icon: LocationOn,
+    component: GerenciamentoEnderecos,
+    layout: "/admin"
+  },
   {
     path: "/alunos",
     name: "Alunos",
@@ -63,7 +88,7 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    path: "/Avaliacao",
+    path: "/avaliacoes",
     name: "Avaliacões",
     rtlName: "Avaliacao",
     icon: LibraryAddCheck,
@@ -71,22 +96,14 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    path: "/Curricular",
-    name: "Componente Curricular",
-    rtlName: "Curricular",
-    icon: LibraryBooks,
-    component: GerenciamentoComponenteCurricular,
+    path: "/categorias",
+    name: "Categorias",
+    rtlName: "Categoria",
+    icon: Unarchive,
+    component: GerenciamentoCategorias,
     layout: "/admin"
   },
-  {
-    path: "/Enderecos",
-    name: "Endereços",
-    rtlName: "Enderecos",
-    icon: LocationOn,
-    component: GerenciamentoEnderecos,
-    layout: "/admin"
-  },
-  
+ 
   // {
   //   path: "/table",
   //   name: "Table List",

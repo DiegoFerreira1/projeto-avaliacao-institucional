@@ -2,33 +2,17 @@ import React, { useState, useEffect } from "react";
 import MaterialTable from "material-table";
 import apiService from "apiService"; 
 
-const GerenciamentoComponenteCurricular = () => {
+const GerenciamentoCategorias = () => {
   const [data, setData] = useState([]);
-  const [cursos, setCursos] = useState([]);
-  const [selectedComponente, setSelectedComponente] = useState(null);
 
   useEffect(() => {
     fetchData();
-    fetchCursos();
   }, []);
 
   const fetchData = async () => {
     try {
-      const componentes = await apiService.getAllComponentes();
-      setData(componentes);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const fetchCursos = async () => {
-    try {
-      const cursosData = await apiService.getAllCursos();
-      const cursosLookup = cursosData.reduce((lookup, curso) => {
-        lookup[curso.id] = curso.descricao;
-        return lookup;
-      }, {});
-      setCursos(cursosLookup);
+      const categorias = await apiService.getAllCategorias();
+      setData(categorias);
     } catch (error) {
       console.error(error);
     }
@@ -36,8 +20,8 @@ const GerenciamentoComponenteCurricular = () => {
 
   const handleCreate = async (newData) => {
     try {
-      await apiService.createComponente(newData);
-      console.log('Componente curricular criado com sucesso.');
+      await apiService.createCategoria(newData);
+      console.log('Categoria criada com sucesso.');
       fetchData();
     } catch (error) {
       console.error(error);
@@ -46,8 +30,8 @@ const GerenciamentoComponenteCurricular = () => {
 
   const handleUpdate = async (newData, oldData) => {
     try {
-      await apiService.updateComponente(oldData.id, newData);
-      console.log('Componente curricular atualizado com sucesso.');
+      await apiService.updateCategoria(oldData.id, newData);
+      console.log('Categoria atualizada com sucesso.');
       fetchData();
     } catch (error) {
       console.error(error);
@@ -56,8 +40,8 @@ const GerenciamentoComponenteCurricular = () => {
 
   const handleDelete = async (oldData) => {
     try {
-      await apiService.deleteComponente(oldData.id);
-      console.log('Componente curricular deletado com sucesso.');
+      await apiService.deleteCategoria(oldData.id);
+      console.log('Categoria deletada com sucesso.');
       fetchData();
     } catch (error) {
       console.error(error);
@@ -67,18 +51,11 @@ const GerenciamentoComponenteCurricular = () => {
   return (
     <>
       <MaterialTable
-        title="Gerenciamento de Componente Curricular"
+        title="Gerenciamento de Categorias"
         columns={[
           { title: 'Id', field: 'id', editable: 'never' },
-          { title: 'Nome do Componente', field: 'componente' },
-          { title: 'Sigla do Componente', field: 'sigla' },
-          { title: 'Matriz Curricular', field: 'matrizCurricular' },
-          { title: 'Carga Horária', field: 'cargaHoraria' },
-          {
-            title: 'Curso',
-            field: 'cursoId',
-            lookup: cursos,
-          },
+          { title: 'Categoria', field: 'categoria' },
+          { title: 'Descrição', field: 'descricao' },
         ]}
         data={data}
         editable={{
@@ -103,4 +80,4 @@ const GerenciamentoComponenteCurricular = () => {
   );
 };
 
-export default GerenciamentoComponenteCurricular;
+export default GerenciamentoCategorias;

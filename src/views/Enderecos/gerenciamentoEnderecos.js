@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import MaterialTable from "material-table";
-import apiService from "apiService"; 
+import React, { useState, useEffect } from 'react';
+import MaterialTable from 'material-table';
+import apiService from 'apiService'; 
 
-const GerenciamentoEndereco = () => {
+const GerenciamentoEnderecos = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -11,7 +11,7 @@ const GerenciamentoEndereco = () => {
 
   const fetchData = async () => {
     try {
-      const enderecos = await apiService.getAllEnderecos(); 
+      const enderecos = await apiService.getAllEnderecos();
       setData(enderecos);
     } catch (error) {
       console.error(error);
@@ -20,9 +20,9 @@ const GerenciamentoEndereco = () => {
 
   const handleCreate = async (newData) => {
     try {
-      await apiService.createEndereco(newData); 
+      await apiService.createEndereco(newData);
       console.log('Endereço criado com sucesso.');
-      fetchData(); 
+      fetchData();
     } catch (error) {
       console.error(error);
     }
@@ -30,9 +30,9 @@ const GerenciamentoEndereco = () => {
 
   const handleUpdate = async (newData, oldData) => {
     try {
-      await apiService.updateEndereco(oldData.id, newData); 
+      await apiService.updateEndereco(oldData.id, newData);
       console.log('Endereço atualizado com sucesso.');
-      fetchData(); 
+      fetchData();
     } catch (error) {
       console.error(error);
     }
@@ -40,48 +40,45 @@ const GerenciamentoEndereco = () => {
 
   const handleDelete = async (oldData) => {
     try {
-      await apiService.deleteEndereco(oldData.id); 
+      await apiService.deleteEndereco(oldData.id);
       console.log('Endereço deletado com sucesso.');
-      fetchData(); 
+      fetchData();
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
-    <>
-      <MaterialTable
-        title="Gerenciamento de Endereço"
-        columns={[
-          { title: 'Id', field: 'id', editable: 'never' },
-          { title: 'Rua', field: 'rua' },
-          { title: 'Número', field: 'numero' },
-          { title: 'CEP', field: 'cep' },
-          { title: 'Cidade', field: 'cidade' },
-          { title: 'Estado', field: 'estado' },
-          { title: 'País', field: 'pais' },
-        ]}
-        data={data}
-        editable={{
-          onRowAdd: newData =>
-            new Promise((resolve, reject) => {
-              handleCreate(newData);
-              resolve();
-            }),
-          onRowUpdate: (newData, oldData) =>
-            new Promise((resolve, reject) => {
-              handleUpdate(newData, oldData);
-              resolve();
-            }),
-          onRowDelete: oldData =>
-            new Promise((resolve, reject) => {
-              handleDelete(oldData);
-              resolve();
-            }),
-        }}
-      />
-    </>
+    <MaterialTable
+      title="Gerenciamento de Endereços"
+      columns={[
+        { title: 'Id', field: 'id', editable: 'never' },
+        { title: 'Rua', field: 'rua' },
+        { title: 'CEP', field: 'cep' },
+        { title: 'Cidade', field: 'cidade' },
+        { title: 'Estado', field: 'estado' },
+        { title: 'País', field: 'pais' },
+      ]}
+      data={data}
+      editable={{
+        onRowAdd: newData =>
+          new Promise((resolve, reject) => {
+            handleCreate(newData);
+            resolve();
+          }),
+        onRowUpdate: (newData, oldData) =>
+          new Promise((resolve, reject) => {
+            handleUpdate(newData, oldData);
+            resolve();
+          }),
+        onRowDelete: oldData =>
+          new Promise((resolve, reject) => {
+            handleDelete(oldData);
+            resolve();
+          }),
+      }}
+    />
   );
 };
 
-export default GerenciamentoEndereco;
+export default GerenciamentoEnderecos;

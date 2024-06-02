@@ -1,191 +1,236 @@
-import axios from 'axios';
+import axios from "axios";
 
-const api = axios.create({
-  baseURL: 'https://demo8788642.mockable.io/', 
-});
+const BASE_URL = 'http://localhost:3000';
 
 const apiService = {
 
-  // Operações CRUD em alunos
-  
-    getAllAlunos: async () => {
-      try {
-        const response = await api.get('alunos');
-        return response.data.lista.map(c => ({
-          id: c.id,
-          cpf: c.cpf,
-          matricula: c.matricula,
-          nome: c.nome,
-          enderecoId: c.enderecoId,
-          curso: c.curso
-        }));
-      } catch (error) {
-        throw new Error('Erro ao buscar alunos: ' + error.message);
-      }
-    },
-  
-    createAluno: async (alunoData) => {
-      try {
-        const response = await api.post('alunos', alunoData);
-        return response.data;
-      } catch (error) {
-        throw new Error('Erro ao criar aluno: ' + error.message);
-      }
-    },
-  
-    updateAluno: async (alunoId, alunoData) => {
-      try {
-        const response = await api.put(`alunos/${alunoId}`, alunoData);
-        return response.data;
-      } catch (error) {
-        throw new Error('Erro ao atualizar aluno: ' + error.message);
-      }
-    },
-  
-    deleteAluno: async (alunoId) => {
-      try {
-        const response = await api.delete(`alunos/${alunoId}`);
-        return response.data;
-      } catch (error) {
-        throw new Error('Erro ao deletar aluno: ' + error.message);
-      }
-    },
-
-  // Operações CRUD para Gerenciamento de Avaliação
-  getAllAvaliacoes: async () => {
+  // Funções para controle de cursos
+  getAllCursos: async () => {
     try {
-      const response = await api.get('avaliacoes');
-      return response.data.lista.map(a => ({
-        id: a.id,
-        periodo: a.periodo,
-        componenteCurricular: a.componenteCurricular,
-        categoria: a.categoria,
-        conceitoProfessor: a.conceitoProfessor,
-        conceitoRecurso: a.conceitoRecurso,
-        conceitoRelevancia: a.conceitoRelevancia,
-      }));
-    } catch (error) {
-      throw new Error('Erro ao buscar avaliações: ' + error.message);
-    }
-  },
-  
-  createAvaliacao: async (avaliacaoData) => {
-    try {
-      const response = await api.post('avaliacoes', avaliacaoData);
+      const response = await axios.get(`${BASE_URL}/cursos`);
       return response.data;
     } catch (error) {
-      throw new Error('Erro ao criar avaliação: ' + error.message);
+      console.error("Erro ao obter cursos:", error);
+      throw error;
     }
   },
-  
-  updateAvaliacao: async (avaliacaoId, avaliacaoData) => {
+
+  createCurso: async (curso) => {
     try {
-      const response = await api.put(`avaliacoes/${avaliacaoId}`, avaliacaoData);
+      await axios.post(`${BASE_URL}/cursos`, curso);
+    } catch (error) {
+      console.error("Erro ao criar curso:", error);
+      throw error;
+    }
+  },
+
+  updateCurso: async (id, curso) => {
+    try {
+      await axios.put(`${BASE_URL}/cursos/${id}`, curso);
+    } catch (error) {
+      console.error("Erro ao atualizar curso:", error);
+      throw error;
+    }
+  },
+
+  deleteCurso: async (id) => {
+    try {
+      await axios.delete(`${BASE_URL}/cursos/${id}`);
+    } catch (error) {
+      console.error("Erro ao deletar curso:", error);
+      throw error;
+    }
+  },
+
+  // Funções para controle de componentes curriculares
+  getAllComponentes: async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/componentes`);
       return response.data;
     } catch (error) {
-      throw new Error('Erro ao atualizar avaliação: ' + error.message);
+      console.error("Erro ao obter componentes:", error);
+      throw error;
     }
   },
-  
-  deleteAvaliacao: async (avaliacaoId) => {
+
+  createComponente: async (componente) => {
     try {
-      const response = await api.delete(`avaliacoes/${avaliacaoId}`);
-      return response.data;
+      await axios.post(`${BASE_URL}/componentes`, componente);
     } catch (error) {
-      throw new Error('Erro ao deletar avaliação: ' + error.message);
+      console.error("Erro ao criar componente:", error);
+      throw error;
     }
   },
-  
-    // Operações CRUD para Gerenciamento de Componentes Curriculares
 
-    getAllComponentes: async () => {
-      try {
-        const response = await api.get('componentes');
-        return response.data.lista.map(c => ({
-          id: c.id,
-          nome: c.nome,
-          sigla: c.sigla,
-          matrizCurricular: c.matrizCurricular,
-          cargaHoraria: c.cargaHoraria,
-        }));
-      } catch (error) {
-        throw new Error('Erro ao buscar componentes curriculares: ' + error.message);
-      }
-    },
-  
-    createComponente: async (componenteData) => {
-      try {
-        const response = await api.post('componentes', componenteData);
-        return response.data;
-      } catch (error) {
-        throw new Error('Erro ao criar componente curricular: ' + error.message);
-      }
-    },
-  
-    updateComponente: async (componenteId, componenteData) => {
-      try {
-        const response = await api.put(`componentes/${componenteId}`, componenteData);
-        return response.data;
-      } catch (error) {
-        throw new Error('Erro ao atualizar componente curricular: ' + error.message);
-      }
-    },
-  
-    deleteComponente: async (componenteId) => {
-      try {
-        const response = await api.delete(`componentes/${componenteId}`);
-        return response.data;
-      } catch (error) {
-        throw new Error('Erro ao deletar componente curricular: ' + error.message);
-      }
-    },
+  updateComponente: async (id, componente) => {
+    try {
+      await axios.put(`${BASE_URL}/componentes/${id}`, componente);
+    } catch (error) {
+      console.error("Erro ao atualizar componente:", error);
+      throw error;
+    }
+  },
 
-  // Operações CRUD para Gerenciamento de Endereços
+  deleteComponente: async (id) => {
+    try {
+      await axios.delete(`${BASE_URL}/componentes/${id}`);
+    } catch (error) {
+      console.error("Erro ao deletar componente:", error);
+      throw error;
+    }
+  },
 
+  // Funções para controle de endereços
   getAllEnderecos: async () => {
     try {
-      const response = await api.get('enderecos');
-      return response.data.lista.map(e => ({
-        id: e.id,
-        rua: e.rua,
-        numero: e.numero,
-        cep: e.cep,
-        cidade: e.cidade,
-        estado: e.estado,
-        pais: e.pais,
-      }));
+      const response = await axios.get(`${BASE_URL}/enderecos`);
+      return response.data;
     } catch (error) {
-      throw new Error('Erro ao buscar endereços: ' + error.message);
+      console.error("Erro ao obter endereços:", error);
+      throw error;
     }
   },
 
-  createEndereco: async (enderecoData) => {
+  createEndereco: async (endereco) => {
     try {
-      const response = await api.post('enderecos', enderecoData);
-      return response.data;
+      await axios.post(`${BASE_URL}/enderecos`, endereco);
     } catch (error) {
-      throw new Error('Erro ao criar endereço: ' + error.message);
+      console.error("Erro ao criar endereço:", error);
+      throw error;
     }
   },
 
-  updateEndereco: async (enderecoId, enderecoData) => {
+  updateEndereco: async (id, endereco) => {
     try {
-      const response = await api.put(`enderecos/${enderecoId}`, enderecoData);
-      return response.data;
+      await axios.put(`${BASE_URL}/enderecos/${id}`, endereco);
     } catch (error) {
-      throw new Error('Erro ao atualizar endereço: ' + error.message);
+      console.error("Erro ao atualizar endereço:", error);
+      throw error;
     }
   },
 
-  deleteEndereco: async (enderecoId) => {
+  deleteEndereco: async (id) => {
     try {
-      const response = await api.delete(`enderecos/${enderecoId}`);
+      await axios.delete(`${BASE_URL}/enderecos/${id}`);
+    } catch (error) {
+      console.error("Erro ao deletar endereço:", error);
+      throw error;
+    }
+  },
+
+  // Funções para controle de alunos
+  getAllAlunos: async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/alunos`);
       return response.data;
     } catch (error) {
-      throw new Error('Erro ao deletar endereço: ' + error.message);
+      console.error("Erro ao obter alunos:", error);
+      throw error;
     }
-  }
-    
+  },
+
+  createAluno: async (aluno) => {
+    try {
+      await axios.post(`${BASE_URL}/alunos`, aluno);
+    } catch (error) {
+      console.error("Erro ao criar aluno:", error);
+      throw error;
+    }
+  },
+
+  updateAluno: async (id, aluno) => {
+    try {
+      await axios.put(`${BASE_URL}/alunos/${id}`, aluno);
+    } catch (error) {
+      console.error("Erro ao atualizar aluno:", error);
+      throw error;
+    }
+  },
+
+  deleteAluno: async (id) => {
+    try {
+      await axios.delete(`${BASE_URL}/alunos/${id}`);
+    } catch (error) {
+      console.error("Erro ao deletar aluno:", error);
+      throw error;
+    }
+  },
+
+  //Funções para controle de Avaliações
+  getAllAvaliacoes: async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/avaliacoes`);
+      return response.data;
+    } catch (error) {
+      console.error("Erro ao obter avaliações:", error);
+      throw error;
+    }
+  },
+
+  createAvaliacao: async (avaliacao) => {
+    try {
+      await axios.post(`${BASE_URL}/avaliacoes`, avaliacao);
+    } catch (error) {
+      console.error("Erro ao criar avaliação:", error);
+      throw error;
+    }
+  },
+
+  updateAvaliacao: async (id, avaliacao) => {
+    try {
+      await axios.put(`${BASE_URL}/avaliacoes/${id}`, avaliacao);
+    } catch (error) {
+      console.error("Erro ao atualizar avaliação:", error);
+      throw error;
+    }
+  },
+
+  deleteAvaliacao: async (id) => {
+    try {
+      await axios.delete(`${BASE_URL}/avaliacoes/${id}`);
+    } catch (error) {
+      console.error("Erro ao deletar avaliação:", error);
+      throw error;
+    }
+  },
+
+  // Funções para controle de categorias de avaliação
+  getAllCategorias: async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/categorias`);
+      return response.data;
+    } catch (error) {
+      console.error("Erro ao obter categorias de avaliação:", error);
+      throw error;
+    }
+  },
+
+  createCategoria: async (categoria) => {
+    try {
+      await axios.post(`${BASE_URL}/categorias`, categoria);
+    } catch (error) {
+      console.error("Erro ao criar categoria de avaliação:", error);
+      throw error;
+    }
+  },
+
+  updateCategoria: async (id, categoria) => {
+    try {
+      await axios.put(`${BASE_URL}/categorias/${id}`, categoria);
+    } catch (error) {
+      console.error("Erro ao atualizar categoria de avaliação:", error);
+      throw error;
+    }
+  },
+
+  deleteCategoria: async (id) => {
+    try {
+      await axios.delete(`${BASE_URL}/categorias/${id}`);
+    } catch (error) {
+      console.error("Erro ao deletar categoria de avaliação:", error);
+      throw error;
+    }
+  },
 };
 
 export default apiService;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MaterialTable from "material-table";
-import apiService from "apiServiceTeste"; 
+import apiService from "apiService"; 
 
 const GerenciamentoAvaliacoes = () => {
   const [data, setData] = useState([]);
@@ -27,7 +27,7 @@ const GerenciamentoAvaliacoes = () => {
       const componentesData = await apiService.getAllComponentes();
       const options = {};
       componentesData.forEach(componente => {
-        options[componente.id] = `${componente.id} - ${componente.nome}`;
+        options[componente.id] = componente.nome; // Usando o nome do componente como label
       });
       setComponentes(options);
     } catch (error) {
@@ -40,7 +40,7 @@ const GerenciamentoAvaliacoes = () => {
       const alunosData = await apiService.getAllAlunos();
       const options = {};
       alunosData.forEach(aluno => {
-        options[aluno.id] = `${aluno.id} - ${aluno.nome}`;
+        options[aluno.id] = aluno.nome; // Usando o nome do aluno como label
       });
       setAlunos(options);
     } catch (error) {
@@ -50,7 +50,12 @@ const GerenciamentoAvaliacoes = () => {
 
   const handleCreate = async (newData) => {
     try {
-      await apiService.createAvaliacao(newData);
+      const newDataWithIds = {
+        ...newData,
+        idAluno: newData.idAluno,
+        idComponenteCurricular: newData.idComponenteCurricular,
+      };
+      await apiService.createAvaliacao(newDataWithIds);
       console.log('Avaliação criada com sucesso.');
       fetchData();
     } catch (error) {
@@ -60,7 +65,12 @@ const GerenciamentoAvaliacoes = () => {
 
   const handleUpdate = async (newData, oldData) => {
     try {
-      await apiService.updateAvaliacao(oldData.id, newData);
+      const newDataWithIds = {
+        ...newData,
+        idAluno: newData.idAluno,
+        idComponenteCurricular: newData.idComponenteCurricular,
+      };
+      await apiService.updateAvaliacao(oldData.id, newDataWithIds);
       console.log('Avaliação atualizada com sucesso.');
       fetchData();
     } catch (error) {
@@ -85,31 +95,27 @@ const GerenciamentoAvaliacoes = () => {
         columns={[
           { title: 'Id', field: 'id', editable: 'never' },
           { title: 'Período da Avaliação', field: 'periodo', type: 'string', validate: rowData => rowData.periodo?.length === 6 },
-          { title: 'Componente Curricular', field: 'componente', lookup: componentes },
-          { title: 'Aluno', field: 'aluno', lookup: alunos },
+          { title: 'Componente Curricular', field: 'idComponenteCurricular', lookup: componentes },
+          { title: 'Aluno', field: 'idAluno', lookup: alunos },
           { title: 'Categoria da Avaliação', field: 'categoria', type: 'string' },
-
-          //Lista de 0 a 10
-
-    {
-      title: 'Conceito do Professor',
-      field: 'conceitoProfessor',
-      type: 'numeric',
-      lookup: { 0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10' },
-    },
-    {
-      title: 'Conceito do Recurso Didático',
-      field: 'conceitoRecurso',
-      type: 'numeric',
-      lookup: { 0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10' },
-    },
-    {
-      title: 'Conceito da Relevância da Disciplina',
-      field: 'conceitoRelevancia',
-      type: 'numeric',
-      lookup: { 0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10' },
-    },
-          // Outras colunas...
+          {
+            title: 'Conceito do Professor',
+            field: 'conceitoProfessor',
+            type: 'numeric',
+            lookup: { 0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10' },
+          },
+          {
+            title: 'Conceito do Recurso Didático',
+            field: 'conceitoRecurso',
+            type: 'numeric',
+            lookup: { 0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10' },
+          },
+          {
+            title: 'Conceito da Relevância da Disciplina',
+            field: 'conceitoRelevancia',
+            type: 'numeric',
+            lookup: { 0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10' },
+          },
         ]}
         data={data}
         editable={{

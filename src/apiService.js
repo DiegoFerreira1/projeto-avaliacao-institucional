@@ -59,7 +59,8 @@ const apiService = {
       return response.data.lista.map(a => ({
         id: a.id,
         periodo: a.periodo,
-        componenteCurricular: a.componenteCurricular,
+        idAluno: a.idAluno, // Inclui o ID do Aluno
+        idComponenteCurricular: a.idComponenteCurricular, // Inclui o ID do Componente Curricular
         categoria: a.categoria,
         conceitoProfessor: a.conceitoProfessor,
         conceitoRecurso: a.conceitoRecurso,

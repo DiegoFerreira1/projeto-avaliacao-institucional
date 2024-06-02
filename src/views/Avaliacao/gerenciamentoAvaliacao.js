@@ -1,48 +1,43 @@
-import React, { useState, useEffect } from "react";
-import MaterialTable from "material-table";
-import apiService from "apiService"; 
+import React, { useState, useEffect } from 'react';
+import MaterialTable from 'material-table';
+import apiService from 'apiService';
 
 const GerenciamentoAvaliacoes = () => {
-  const [data, setData] = useState([]);
-  const [componentes, setComponentes] = useState({});
-  const [alunos, setAlunos] = useState({});
+  const [avaliacoes, setAvaliacoes] = useState([]);
+  const [categoriasLookup, setCategoriasLookup] = useState({});
+  const [componentesLookup, setComponentesLookup] = useState({});
+  const [alunosLookup, setAlunosLookup] = useState({});
 
   useEffect(() => {
     fetchData();
-    fetchComponentes();
-    fetchAlunos();
   }, []);
 
   const fetchData = async () => {
     try {
-      const avaliacoes = await apiService.getAllAvaliacoes();
-      setData(avaliacoes);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+      const avaliacoesData = await apiService.getAllAvaliacoes();
+      setAvaliacoes(avaliacoesData);
 
-  const fetchComponentes = async () => {
-    try {
+      const categoriasData = await apiService.getAllCategorias();
+      const categoriasOptions = categoriasData.reduce((lookup, categoria) => {
+        lookup[categoria.id] = categoria.categoria;
+        return lookup;
+      }, {});
+      setCategoriasLookup(categoriasOptions);
+
       const componentesData = await apiService.getAllComponentes();
-      const options = {};
-      componentesData.forEach(componente => {
-        options[componente.id] = `${componente.id} - ${componente.nome}`;
-      });
-      setComponentes(options);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+      const componentesOptions = componentesData.reduce((lookup, componente) => {
+        lookup[componente.id] = componente.componente;
+        return lookup;
+      }, {});
+      setComponentesLookup(componentesOptions);
 
-  const fetchAlunos = async () => {
-    try {
       const alunosData = await apiService.getAllAlunos();
-      const options = {};
-      alunosData.forEach(aluno => {
-        options[aluno.id] = `${aluno.id} - ${aluno.nome}`;
-      });
-      setAlunos(options);
+      const alunosOptions = alunosData.reduce((lookup, aluno) => {
+        lookup[aluno.id] = aluno.nomeCompleto;
+        return lookup;
+      }, {});
+      setAlunosLookup(alunosOptions);
+
     } catch (error) {
       console.error(error);
     }
@@ -51,7 +46,6 @@ const GerenciamentoAvaliacoes = () => {
   const handleCreate = async (newData) => {
     try {
       await apiService.createAvaliacao(newData);
-      console.log('Avaliação criada com sucesso.');
       fetchData();
     } catch (error) {
       console.error(error);
@@ -61,7 +55,6 @@ const GerenciamentoAvaliacoes = () => {
   const handleUpdate = async (newData, oldData) => {
     try {
       await apiService.updateAvaliacao(oldData.id, newData);
-      console.log('Avaliação atualizada com sucesso.');
       fetchData();
     } catch (error) {
       console.error(error);
@@ -71,7 +64,6 @@ const GerenciamentoAvaliacoes = () => {
   const handleDelete = async (oldData) => {
     try {
       await apiService.deleteAvaliacao(oldData.id);
-      console.log('Avaliação deletada com sucesso.');
       fetchData();
     } catch (error) {
       console.error(error);
@@ -79,58 +71,37 @@ const GerenciamentoAvaliacoes = () => {
   };
 
   return (
-    <>
-      <MaterialTable
-        title="Gerenciamento de Avaliações"
-        columns={[
-          { title: 'Id', field: 'id', editable: 'never' },
-          { title: 'Período da Avaliação', field: 'periodo', type: 'string', validate: rowData => rowData.periodo?.length === 6 },
-          { title: 'Componente Curricular', field: 'componente', lookup: componentes },
-          { title: 'Aluno', field: 'aluno', lookup: alunos },
-          { title: 'Categoria da Avaliação', field: 'categoria', type: 'string' },
-
-          //Lista de 0 a 10
-
-    {
-      title: 'Conceito do Professor',
-      field: 'conceitoProfessor',
-      type: 'numeric',
-      lookup: { 0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10' },
-    },
-    {
-      title: 'Conceito do Recurso Didático',
-      field: 'conceitoRecurso',
-      type: 'numeric',
-      lookup: { 0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10' },
-    },
-    {
-      title: 'Conceito da Relevância da Disciplina',
-      field: 'conceitoRelevancia',
-      type: 'numeric',
-      lookup: { 0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: '10' },
-    },
-          // Outras colunas...
-        ]}
-        data={data}
-        editable={{
-          onRowAdd: newData =>
-            new Promise((resolve, reject) => {
-              handleCreate(newData);
-              resolve();
-            }),
-          onRowUpdate: (newData, oldData) =>
-            new Promise((resolve, reject) => {
-              handleUpdate(newData, oldData);
-              resolve();
-            }),
-          onRowDelete: oldData =>
-            new Promise((resolve, reject) => {
-              handleDelete(oldData);
-              resolve();
-            }),
-        }}
-      />
-    </>
+    <MaterialTable
+      title="Gerenciamento de Avaliações"
+      columns={[
+        { title: 'Id', field: 'id', editable: 'never' },
+        { title: 'Período', field: 'periodoAvaliacao', type: 'string', validate: rowData => rowData.periodoAvaliacao?.length === 6 },
+        { title: 'Categoria', field: 'categoriaId', lookup: categoriasLookup },
+        { title: 'Componente Curricular', field: 'componenteId', lookup: componentesLookup },
+        { title: 'Aluno', field: 'alunoId', lookup: alunosLookup },
+        { title: 'Conceito Professor', field: 'conceitoProfessor', type: 'numeric' },
+        { title: 'Conceito Didática', field: 'conceitoRecurso', type: 'numeric' },
+        { title: 'Conceito Relevância da Disciplina', field: 'conceitoRelevancia', type: 'numeric' },
+      ]}
+      data={avaliacoes}
+      editable={{
+        onRowAdd: newData =>
+          new Promise((resolve, reject) => {
+            handleCreate(newData);
+            resolve();
+          }),
+        onRowUpdate: (newData, oldData) =>
+          new Promise((resolve, reject) => {
+            handleUpdate(newData, oldData);
+            resolve();
+          }),
+        onRowDelete: oldData =>
+          new Promise((resolve, reject) => {
+            handleDelete(oldData);
+            resolve();
+          }),
+      }}
+    />
   );
 };
 

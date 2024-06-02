@@ -2,7 +2,7 @@
 
 # dependencies
 /node_modules
-/src/ConectTeste.js
+/src/api/db.js
 
 
 # # testing
